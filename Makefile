@@ -29,7 +29,7 @@ CFLAGS += -Wall \
 	 -DEMSCRIPTEN \
 	 -O2
 
-EMSCRIPTEN_FLAGS = -s EXPORTED_FUNCTIONS='["_main","_malloc","_free"]' \
+EMSCRIPTEN_FLAGS = -s EXPORTED_FUNCTIONS='["_init","_keydown","_malloc","_free"]' \
                    -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' \
                    -s MODULARIZE=1 \
                    -s EXPORT_NAME="Free42" \
@@ -46,7 +46,7 @@ libbid:
 
 build: libbid
 	mkdir -p out
-	$(CXX) $(CFLAGS) $(EMSCRIPTEN_FLAGS) -o out/main.js out/libbid.a $(SRCS)
+	$(CXX) $(CFLAGS) $(EMSCRIPTEN_FLAGS) -o out/free42.js out/libbid.a $(SRCS)
 
 clean:
 	rm -rf out
