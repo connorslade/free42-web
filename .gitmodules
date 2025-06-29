@@ -1,3 +1,3 @@
-[submodule "deps/free42"]
-	path = deps/free42
+[submodule "free42"]
+	path = free42
 	url = https://codeberg.org/thomasokken/free42

@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <cstdio>
 
-#include "../deps/free42/common/shell.h"
+#include "../free42/common/shell.h"
 
 const char *shell_platform() {
     return "WebAssembly";
