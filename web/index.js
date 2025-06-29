@@ -25,6 +25,16 @@ const CALLBACKS = {
 
     ctx.putImageData(image, 0, 0);
   },
+  annunciators: (updn, shf, prt, run, g, rad) => {},
+  requestTimeout: (timeout) => {
+    // todo: run notify3(true) if any keys are pressed (also cancel the timeout)
+    setTimeout(() => {
+      module.notify3(false);
+    }, timeout);
+  },
+  beep: (tone) => {
+    alert(`beep ${tone}`);
+  },
 };
 
 (async () => {

@@ -1,12 +1,17 @@
+#include <chrono>
+#include <cstdlib>
 #include <stdint.h>
 #include <cstdio>
+#include <sys/select.h>
+#include <sys/time.h>
+#include "emscripten.h"
 
 #include "../free42/common/shell.h"
 
 #include "lib.h"
 
 const char *shell_platform() {
-    return "WebAssembly";
+    return "WebAssembly 0.1.0";
 }
 
 void shell_blitter(const char *bits, int bytes_per_line, int x, int y, int width, int height) {
@@ -17,11 +22,11 @@ void shell_blitter(const char *bits, int bytes_per_line, int x, int y, int width
 }
 
 void shell_beeper(int tone) {
-    printf("Called shell_beeper with tone %d\n", tone);
+    callbacks.call<void>("beep", tone);
 }
 
 void shell_annunciators(int updn, int shf, int prt, int run, int g, int rad) {
-    printf("Called shell_annunciators with updn %d, shf %d, prt %d, run %d, g %d, rad %d\n", updn, shf, prt, run, g, rad);
+    callbacks.call<void>("annunciators", updn, shf, prt, run, g, rad);
 }
 
 bool shell_wants_cpu() {
@@ -30,26 +35,30 @@ bool shell_wants_cpu() {
 
 void shell_delay(int duration) {}
 
-void shell_request_timeout3(int delay) {}
+void shell_request_timeout3(int delay) {
+    callbacks.call<void>("requestTimeout", delay);
+}
 
 uint8 shell_get_mem() {
-    return 100;
+    return 16000;
 }
 
 bool shell_low_battery() {
     return false;
 }
 
-void shell_powerdown() {
-    printf("Called shell_powerdown\n");
-}
+void shell_powerdown() {}
 
 int8 shell_random_seed() {
-    return 0;
+    return std::rand();
 }
 
 uint4 shell_milliseconds() {
-    return 0;
+    auto now = std::chrono::system_clock::now();
+    auto epoch = now.time_since_epoch();
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
+
+    return ms.count();
 }
 
 const char *shell_number_format() {
@@ -66,20 +75,27 @@ bool shell_clk24() {
 
 void shell_print(const char *text, int length,
                  const char *bits, int bytes_per_line,
-                 int x, int y, int width, int height) {
-    printf("PRINTER: %s\n", text);
+                 int x, int y, int width, int height) {}
+
+// stolen from gtk impl
+void shell_get_time_date(uint4 *time, uint4 *date, int *weekday) {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    struct tm tms;
+    localtime_r(&tv.tv_sec, &tms);
+    if (time != NULL)
+        *time = ((tms.tm_hour * 100 + tms.tm_min) * 100 + tms.tm_sec) * 100 + tv.tv_usec / 10000;
+    if (date != NULL)
+        *date = ((tms.tm_year + 1900) * 100 + tms.tm_mon + 1) * 100 + tms.tm_mday;
+    if (weekday != NULL)
+        *weekday = tms.tm_wday;
 }
 
-void shell_get_time_date(uint4 *time, uint4 *date, int *weekday) {
-    *time = 0;
-    *date = 0;
-    *weekday = 0;
-}
 
 void shell_message(const char *message) {
-    printf("Called shell_message with message %s\n", message);
+    EM_ASM(alert(message));
 }
 
 void shell_log(const char *message) {
-    printf("Called shell_log with message %s\n", message);
+    printf("Free42: %s", message);
 }

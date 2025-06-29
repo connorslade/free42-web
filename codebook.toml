@@ -18,6 +18,7 @@ words = [
     "xvfz",
     "blitter",
     "powerdown",
-    "clk"
+    "clk",
+    "chrono"
 ]
 ignore_patterns = ["D[A-Z]+", "<.*>"]
