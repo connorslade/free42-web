@@ -1,0 +1,3 @@
+[submodule "deps/free42"]
+	path = deps/free42
+	url = https://codeberg.org/thomasokken/free42
