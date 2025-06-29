@@ -1,0 +1,11 @@
+--- out/IntelRDFPMathLib20U1/LIBRARY/makefile.iml_head	2025-06-29 16:15:52.665787682 -0400
++++ "out/IntelRDFPMathLib20U1/LIBRARY/makefile copy.iml_head"	2025-06-29 16:15:43.703910190 -0400
+@@ -519,6 +519,9 @@
+     else
+         __TMP   := $(strip $(subst /, ,$(firstword $(CC))))
+         CC_NAME := $(word $(words $(__TMP)), $(__TMP))
++        ifeq ($(CC_NAME),emcc)
++            CC_NAME := gcc
++        endif
+     endif
+ endif
