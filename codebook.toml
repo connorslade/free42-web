@@ -1,0 +1,23 @@
+dictionaries = ["en_us"]
+words = [
+    "emscripten",
+    "SRCS",
+    "CFLAGS",
+    "CXX",
+    "Wno",
+    "fno",
+    "rtti",
+    "malloc",
+    "ccall",
+    "cwrap",
+    "libbid",
+    "mkdir",
+    "emcc",
+    "iml",
+    "RND",
+    "xvfz",
+    "blitter",
+    "powerdown",
+    "clk"
+]
+ignore_patterns = ["D[A-Z]+", "<.*>"]

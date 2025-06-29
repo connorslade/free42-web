@@ -3,12 +3,17 @@
 
 #include "../free42/common/shell.h"
 
+#include "lib.h"
+
 const char *shell_platform() {
     return "WebAssembly";
 }
 
-void shell_blitter(const char *bits, int bytesperline, int x, int y, int width, int height) {
-    puts("Called shell_blitter\n");
+void shell_blitter(const char *bits, int bytes_per_line, int x, int y, int width, int height) {
+    auto total_bytes = height * bytes_per_line;
+    auto data = val::global("Uint8Array").new_(typed_memory_view(total_bytes, (const uint8_t*)bits));
+
+    callbacks.call<void>("blit", data);
 }
 
 void shell_beeper(int tone) {
@@ -60,7 +65,7 @@ bool shell_clk24() {
 }
 
 void shell_print(const char *text, int length,
-                 const char *bits, int bytesperline,
+                 const char *bits, int bytes_per_line,
                  int x, int y, int width, int height) {
     printf("PRINTER: %s\n", text);
 }

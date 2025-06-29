@@ -23,18 +23,16 @@ CFLAGS += -Wall \
 	 -DDECIMAL_GLOBAL_EXCEPTION_FLAGS_ACCESS_FUNCTIONS=1 \
 	 -DHAVE_SINCOS=1 \
 	 -fno-exceptions \
-	 -fno-rtti \
 	 -D_WCHAR_T_DEFINED \
 	 -DBCD_MATH \
 	 -DEMSCRIPTEN \
 	 -O2
 
-EMSCRIPTEN_FLAGS = -s EXPORTED_FUNCTIONS='["_init","_keydown","_malloc","_free"]' \
-                   -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' \
-                   -s MODULARIZE=1 \
+EMSCRIPTEN_FLAGS = -s MODULARIZE=1 \
                    -s EXPORT_NAME="Free42" \
                    -s ENVIRONMENT=web \
                    -s FILESYSTEM=0 \
+                   -lembind
 
 libbid:
 	mkdir -p out
