@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <cstdio>
 
-#include "shell.h"
+#include "../deps/free42/common/shell.h"
 
 const char *shell_platform() {
     return "WebAssembly";
@@ -27,7 +27,7 @@ void shell_delay(int duration) {}
 
 void shell_request_timeout3(int delay) {}
 
-uint8_t shell_get_mem() {
+uint8 shell_get_mem() {
     return 100;
 }
 
@@ -39,11 +39,11 @@ void shell_powerdown() {
     printf("Called shell_powerdown\n");
 }
 
-int8_t shell_random_seed() {
+int8 shell_random_seed() {
     return 0;
 }
 
-uint8_t shell_milliseconds() {
+uint4 shell_milliseconds() {
     return 0;
 }
 
@@ -65,11 +65,7 @@ void shell_print(const char *text, int length,
     printf("PRINTER: %s\n", text);
 }
 
-bool shell_always_on(int always_on) {
-    return 0;
-}
-
-void shell_get_time_date(uint8_t *time, uint8_t *date, int *weekday) {
+void shell_get_time_date(uint4 *time, uint4 *date, int *weekday) {
     *time = 0;
     *date = 0;
     *weekday = 0;

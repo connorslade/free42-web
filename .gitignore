@@ -1,4 +1,5 @@
 .cache
 out
 
-compile_commands.json
+compile_commands*
+gcc111libbid.a
