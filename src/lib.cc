@@ -42,14 +42,21 @@ std::string copy() {
   return string;
 }
 
-void paste(std::string str) {
-    core_paste(str.c_str());
+void paste(std::string str) { core_paste(str.c_str()); }
+
+void save_state(std::string filename) {
+  auto path = std::string("/states/") + filename;
+  core_save_state(path.c_str());
+}
+
+void load_state(std::string filename) {
+  auto path = std::string("/states/") + filename;
+  core_init(1, 26, path.c_str(), 0);
 }
 
 EMSCRIPTEN_BINDINGS(free42) {
   function("init", &init);
   function("updateSettings", &updateSettings);
-
   function("keydown", &keydown);
   function("keyup", &core_keyup);
   function("notify1", &core_keytimeout1);
@@ -58,4 +65,6 @@ EMSCRIPTEN_BINDINGS(free42) {
   function("repaint", &core_repaint_display);
   function("copy", &copy);
   function("paste", &paste);
+  function("saveState", &save_state);
+  function("loadState", &load_state);
 }

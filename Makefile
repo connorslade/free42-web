@@ -10,7 +10,7 @@ SRCS = $(wildcard src/*.cc) \
 	free42/common/core_math1.cc free42/common/core_math2.cc free42/common/core_phloat.cc free42/common/core_sto_rcl.cc \
 	free42/common/core_tables.cc free42/common/core_variables.cc
 
-# Copied free42/common/from free42 makefile
+# Modified from free42/common/from free42 makefile
 CFLAGS += -Wall \
 	 -Wno-parentheses \
 	 -Wno-sign-compare \
@@ -31,8 +31,10 @@ CFLAGS += -Wall \
 EMSCRIPTEN_FLAGS = -s MODULARIZE=1 \
                    -s EXPORT_NAME="Free42" \
                    -s ENVIRONMENT=web \
-                   -s FILESYSTEM=0 \
-                   -lembind
+                   -s EXPORTED_RUNTIME_METHODS=['FS','IDBFS'] \
+                   -s FORCE_FILESYSTEM=1 \
+                   -lembind \
+                   -lidbfs.js
 
 libbid:
 	mkdir -p out

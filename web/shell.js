@@ -1,3 +1,4 @@
+import { States } from "./states.js";
 import { Point } from "./math.js";
 
 // todo: move some stuff outta here
@@ -64,7 +65,15 @@ export class Shell {
       this.keyReleased();
     });
 
+    this.free42.FS.mkdir("/states");
+    this.free42.FS.mount(this.free42.IDBFS, {}, "/states");
+    this.free42.FS.syncfs(true, () => {});
+
+    this.states = new States(this.free42);
+    this.states.updateInterface();
+
     this.free42.init(this);
+    this.free42.load(null);
   }
 
   keyPressed(keycode) {
