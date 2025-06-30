@@ -32,6 +32,15 @@ export class Bounds {
     this.max = new Point(Math.max(a.x, b.x), Math.max(a.y, b.y));
   }
 
+  contains(point) {
+    return (
+      point.x >= this.min.x &&
+      point.x <= this.max.x &&
+      point.y >= this.min.y &&
+      point.y <= this.max.y
+    );
+  }
+
   width() {
     return this.max.x - this.min.x;
   }

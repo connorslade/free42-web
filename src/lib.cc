@@ -16,23 +16,21 @@ extern "C" {
         core_powercycle();
     }
 
-    void keydown(int key) {
+    int keydown(int key) {
         bool enqueued;
         int repeat;
         core_keydown(key, &enqueued, &repeat);
-    }
 
-    void keyup() { core_keyup(); }
-    void notify1() { core_keytimeout1(); }
-    void notify2() { core_keytimeout2(); }
-    void notify3(bool interrupted) { core_timeout3(interrupted); }
+        return repeat;
+    }
 }
 
 EMSCRIPTEN_BINDINGS(free42) {
     function("init", &init);
     function("keydown", &keydown);
-    function("keyup", &keydown);
-    function("notify1", &notify1);
-    function("notify2", &notify2);
-    function("notify3", &notify3);
+    function("keyup", &core_keyup);
+    function("notify1", &core_keytimeout1);
+    function("notify2", &core_keytimeout2);
+    function("notify3", &core_timeout3);
+    function("repaint", &core_repaint_display);
 }

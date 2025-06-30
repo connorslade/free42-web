@@ -1,13 +1,76 @@
-import { Layout } from "./layout.js";
-
-const screen = document.querySelector("#screen");
-const ctx = screen.getContext("2d");
+import { Point } from "./math.js";
 
 export class Shell {
-  constructor(skin, layout) {
+  constructor(free42, skin, layout) {
+    this.free42 = free42;
     this.skin = skin;
     this.layout = layout;
+
+    this.screen = document.querySelector("#screen");
+    this.ctx = this.screen.getContext("2d");
+
+    this.keydown = false;
+    this.keyTimeouts = [];
+    this.coreTimeout = null;
+
+    this.screen.addEventListener("mousedown", (event) => {
+      let click = new Point(event.offsetX, event.offsetY);
+      for (let key of this.layout.keys) {
+        if (key.sensitive.contains(click)) this.keyPressed(key.keycode);
+      }
+    });
+
+    this.screen.addEventListener("mousemove", (event) => {
+      let hover = new Point(event.offsetX, event.offsetY);
+      let overButton = this.layout.keys.some((key) =>
+        key.display.contains(hover),
+      );
+
+      if (overButton) this.screen.style.cursor = "pointer";
+      else this.screen.style.cursor = "default";
+    });
+
+    document.addEventListener("mouseup", () => {
+      if (this.keydown) this.keyReleased();
+    });
+
+    this.free42.init(this);
   }
+
+  keyPressed(keycode) {
+    console.log(`keydown ${keycode}`);
+
+    if (this.keydown) this.keyReleased();
+    if (this.coreTimeout != null) {
+      clearTimeout(this.coreTimeout);
+      this.free42.notify3(true);
+    }
+
+    this.keydown = true;
+    let repeat = this.free42.keydown(keycode);
+    this.free42.repaint();
+    console.log(`repeat: ${repeat}`);
+
+    this.keyTimeouts = [
+      setTimeout(() => {
+        console.log("notify1");
+        this.free42.notify1();
+      }, 250),
+      setTimeout(() => {
+        console.log("notify2");
+        this.free42.notify2();
+      }, 2000),
+    ];
+  }
+
+  keyReleased() {
+    this.keydown = false;
+    for (let timeout of this.keyTimeouts) clearTimeout(timeout);
+    console.log("keyup");
+    this.free42.keyup();
+  }
+
+  // == free42 core events==
 
   init() {
     console.log("Wasm module loaded!");
@@ -15,7 +78,7 @@ export class Shell {
     let [width, height] = [this.layout.skin.width(), this.layout.skin.height()];
 
     // blit background
-    ctx.drawImage(
+    this.ctx.drawImage(
       this.skin,
       this.layout.skin.min.x,
       this.layout.skin.min.y,
@@ -32,7 +95,7 @@ export class Shell {
     // 17 bytes per line, 131×16 px
     let display = this.layout.display;
 
-    let image = ctx.createImageData(
+    let image = this.ctx.createImageData(
       131 * display.scale.x,
       16 * display.scale.y,
     );
@@ -58,14 +121,15 @@ export class Shell {
       }
     }
 
-    ctx.putImageData(image, display.start.x, display.start.y);
+    this.ctx.putImageData(image, display.start.x, display.start.y);
   }
 
   annunciators(updn, shf, prt, run, g, rad) {}
 
   requestTimeout(timeout) {
-    // todo: run notify3(true) if any keys are pressed (also cancel the timeout)
-    setTimeout(() => {
+    console.log(`set timeout for ${timeout}ms`);
+    this.coreTimeout = setTimeout(() => {
+      this.coreTimeout = null;
       module.notify3(false);
     }, timeout);
   }

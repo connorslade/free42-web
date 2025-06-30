@@ -9,13 +9,7 @@ import { Layout } from "./layout.js";
   });
 
   let layout = await (await fetch("skin.layout")).text();
-
-  let shell = new Shell(skin, new Layout(layout));
-  console.log(shell);
-
   let module = await Free42();
-  module.init(shell);
 
-  module.keydown(29);
-  module.keyup();
+  new Shell(module, skin, new Layout(layout));
 })();
