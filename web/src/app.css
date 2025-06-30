@@ -1,0 +1,5 @@
+span[title] {
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    cursor: help;
+}

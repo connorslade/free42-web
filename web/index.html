@@ -4,39 +4,10 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Free42 Online</title>
-        <script type="module" src="/src/main.ts"></script>
         <script src="free42.js"></script>
-
-        <style>
-            span[title] {
-                text-decoration: underline;
-                text-decoration-style: dashed;
-                cursor: help;
-            }
-        </style>
     </head>
     <body>
-        <h1>Free42 Online</h1>
-        <p>
-            An online
-            <span title="Front end for the Free42 core library">shell</span> for
-            <a href="https://thomasokken.com/free42/">Free42</a>, . Created by
-            <a href="https://connorcode.com">Connor Slade</a>,
-            <a href="https://github.com/connorslade/free42-web">source code</a>
-            is available on GitHub.
-        </p>
-
-        <canvas
-            id="screen"
-            width="340px"
-            height="617px"
-            style="image-rendering: pixelated"
-        ></canvas>
-
-        <h2>States</h2>
-        <input type="text" placeholder="State Name" />
-        <button>Save State</button>
-
-        <div id="states"></div>
+        <div id="app"></div>
+        <script type="module" src="/src/main.ts"></script>
     </body>
 </html>
