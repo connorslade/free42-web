@@ -6,6 +6,10 @@ export class Shell {
     this.skin = skin;
     this.layout = layout;
 
+    this.audio = new AudioContext();
+    this.oscillator = this.audio.createOscillator();
+    this.oscillator.connect(this.audio.destination);
+
     this.screen = document.querySelector("#screen");
     this.ctx = this.screen.getContext("2d");
 
@@ -13,7 +17,12 @@ export class Shell {
     this.keyTimeouts = [];
     this.coreTimeout = null;
 
+    this.settings = new Settings();
+    this.settings.allowBigStack = true;
+    this.free42.updateSettings(this.settings);
+
     this.screen.addEventListener("mousedown", (event) => {
+      this.audio.resume();
       let click = new Point(event.offsetX, event.offsetY);
       for (let key of this.layout.keys) {
         if (key.sensitive.contains(click)) this.keyPressed(key.keycode);
@@ -75,7 +84,7 @@ export class Shell {
   init() {
     console.log("Wasm module loaded!");
 
-    let [width, height] = [this.layout.skin.width(), this.layout.skin.height()];
+    let [width, height] = this.layout.skin.size();
 
     // blit background
     this.ctx.drawImage(
@@ -124,7 +133,37 @@ export class Shell {
     this.ctx.putImageData(image, display.start.x, display.start.y);
   }
 
-  annunciators(updn, shf, prt, run, g, rad) {}
+  annunciators(updn, shf, prt, run, g, rad) {
+    let annunciators = {
+      1: updn,
+      2: shf,
+      3: prt,
+      4: run,
+      5: -1,
+      6: g,
+      7: rad,
+    };
+
+    for (let annunciator of this.layout.annunciators) {
+      let status = annunciators[annunciator.code];
+      if (status == -1) continue;
+
+      let [width, height] = annunciator.bounds.size();
+      let from = status == 1 ? annunciator.active : annunciator.bounds.min;
+
+      this.ctx.drawImage(
+        this.skin,
+        from.x,
+        from.y,
+        width,
+        height,
+        annunciator.bounds.min.x,
+        annunciator.bounds.min.y,
+        width,
+        height,
+      );
+    }
+  }
 
   requestTimeout(timeout) {
     console.log(`set timeout for ${timeout}ms`);
@@ -135,6 +174,26 @@ export class Shell {
   }
 
   beep(tone) {
-    alert(`beep ${tone}`);
+    const TONES = [165, 220, 247, 277, 294, 330, 370, 415, 440, 554, 1865];
+    let [freq, duration] = [TONES[tone], tone == 10 ? 125 : 250];
+
+    this.oscillator.type = "sine";
+    this.oscillator.frequency.setValueAtTime(freq, this.audio.currentTime);
+    this.oscillator.start();
+    setTimeout(() => {
+      this.oscillator.stop();
+    }, duration);
   }
+
+  powerdown() {
+    console.log("shutdown");
+  }
+}
+
+class Settings {
+  matrixSingularmatrix = false;
+  matrixOutOfRange = false;
+  autoRepeat = false;
+  allowBigStack = false;
+  localizedCopyPaste = false;
 }

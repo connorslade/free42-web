@@ -59,11 +59,11 @@ export class Layout {
 
     let code = parser.nextInt();
     parser.skipWhitespace();
-    let sensitive = parser.nextRect();
+    let display = parser.nextRect();
     parser.skipWhitespace();
-    let activeState = parser.nextPoint();
+    let active = parser.nextPoint();
 
-    this.annunciators.push(new Annunciator(code, sensitive, activeState));
+    this.annunciators.push(new Annunciator(code, display, active));
   }
 }
 
@@ -86,9 +86,9 @@ export class Key {
 }
 
 export class Annunciator {
-  constructor(code, sensitive, activeState) {
+  constructor(code, bounds, active) {
     this.code = code;
-    this.sensitive = sensitive;
-    this.activeState = activeState;
+    this.bounds = bounds;
+    this.active = active;
   }
 }

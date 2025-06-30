@@ -41,6 +41,10 @@ export class Bounds {
     );
   }
 
+  size() {
+    return [this.width(), this.height()];
+  }
+
   width() {
     return this.max.x - this.min.x;
   }

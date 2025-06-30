@@ -47,7 +47,9 @@ bool shell_low_battery() {
     return false;
 }
 
-void shell_powerdown() {}
+void shell_powerdown() {
+    callbacks.call<void>("powerdown");
+}
 
 int8 shell_random_seed() {
     return std::rand();

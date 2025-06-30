@@ -23,10 +23,20 @@ extern "C" {
 
         return repeat;
     }
+
+    void updateSettings(val settings) {
+        core_settings.matrix_singularmatrix = settings["matrixSingularmatrix"].as<bool>();
+        core_settings.matrix_outofrange = settings["matrixOutOfRange"].as<bool>();
+        core_settings.auto_repeat = settings["autoRepeat"].as<bool>();
+        core_settings.allow_big_stack = settings["allowBigStack"].as<bool>();
+        core_settings.localized_copy_paste = settings["localizedCopyPaste"].as<bool>();
+    }
 }
 
 EMSCRIPTEN_BINDINGS(free42) {
     function("init", &init);
+    function("updateSettings", &updateSettings);
+
     function("keydown", &keydown);
     function("keyup", &core_keyup);
     function("notify1", &core_keytimeout1);
