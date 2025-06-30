@@ -11,5 +11,5 @@ import { Layout } from "./layout.js";
   let layout = await (await fetch("skin.layout")).text();
   let module = await Free42();
 
-  new Shell(module, skin, new Layout(layout));
+  window.shell = new Shell(module, skin, new Layout(layout));
 })();

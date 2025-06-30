@@ -43,12 +43,18 @@ export class Shell {
       if (this.keydown) this.keyReleased();
     });
 
+    document.addEventListener("keydown", async (event) => {
+      console.log(event);
+      if (event.ctrlKey && ["c", "C"].includes(event.key))
+        await navigator.clipboard.writeText(this.free42.copy());
+      if (event.ctrlKey && ["v", "V"].includes(event.key))
+        this.free42.paste(await navigator.clipboard.readText());
+    });
+
     this.free42.init(this);
   }
 
   keyPressed(keycode) {
-    console.log(`keydown ${keycode}`);
-
     if (this.keydown) this.keyReleased();
     if (this.coreTimeout != null) {
       clearTimeout(this.coreTimeout);
@@ -58,24 +64,16 @@ export class Shell {
     this.keydown = true;
     let repeat = this.free42.keydown(keycode);
     this.free42.repaint();
-    console.log(`repeat: ${repeat}`);
 
     this.keyTimeouts = [
-      setTimeout(() => {
-        console.log("notify1");
-        this.free42.notify1();
-      }, 250),
-      setTimeout(() => {
-        console.log("notify2");
-        this.free42.notify2();
-      }, 2000),
+      setTimeout(() => this.free42.notify1(), 250),
+      setTimeout(() => this.free42.notify2(), 2000),
     ];
   }
 
   keyReleased() {
     this.keydown = false;
     for (let timeout of this.keyTimeouts) clearTimeout(timeout);
-    console.log("keyup");
     this.free42.keyup();
   }
 
@@ -166,7 +164,6 @@ export class Shell {
   }
 
   requestTimeout(timeout) {
-    console.log(`set timeout for ${timeout}ms`);
     this.coreTimeout = setTimeout(() => {
       this.coreTimeout = null;
       module.notify3(false);
@@ -185,9 +182,7 @@ export class Shell {
     }, duration);
   }
 
-  powerdown() {
-    console.log("shutdown");
-  }
+  powerdown() {}
 }
 
 class Settings {

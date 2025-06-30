@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <sys/select.h>
 #include <sys/time.h>
+#include <thread>
 #include "emscripten.h"
 
 #include "../free42/common/shell.h"
@@ -33,7 +34,9 @@ bool shell_wants_cpu() {
     return false;
 }
 
-void shell_delay(int duration) {}
+void shell_delay(int duration) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(duration));
+}
 
 void shell_request_timeout3(int delay) {
     callbacks.call<void>("requestTimeout", delay);

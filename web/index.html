@@ -3,18 +3,28 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Free42</title>
+        <title>Free42 Online</title>
         <script defer src="index.js" type="module"></script>
         <script src="free42.js"></script>
+
+        <style>
+            span[title] {
+                text-decoration: underline;
+                text-decoration-style: dashed;
+                cursor: help;
+            }
+        </style>
     </head>
     <body>
         <h1>Free42 Online</h1>
         <p>
-            This is an online shell for Thomas Okken's Free42, a hp42s emulator.
-            Website by Connor Slade, source code is
-            <a href="https://github.com/connorslade/free42-web"
-                >available on GitHub</a
-            >.
+            An online
+            <span title="Front end for the Free42 core library">shell</span> for
+            Thomas Okken's <a href="https://thomasokken.com/free42/">Free42</a>,
+            a re-implementation of the HP-42S calculator. Web port by Connor
+            Slade,
+            <a href="https://github.com/connorslade/free42-web">source code</a>
+            is available on GitHub.
         </p>
 
         <canvas
