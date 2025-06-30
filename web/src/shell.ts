@@ -1,9 +1,32 @@
-import { States } from "./states.js";
-import { Point } from "./math.js";
+import { States } from "./states.ts";
+import { Point } from "./math.ts";
+import type { MainModule } from "./free42";
+import type { Layout } from "./layout.ts";
+import type { Keymap } from "./keymap.ts";
 
 // todo: move some stuff outta here
 export class Shell {
-  constructor(free42, skin, layout, keymap) {
+  free42: MainModule;
+  skin: HTMLImageElement;
+  layout: Layout;
+  keymap: Keymap;
+
+  audio: AudioContext;
+  screen: any;
+  ctx: any;
+
+  keydown: boolean = false;
+  keyTimeouts: number[] = [];
+  coreTimeout: number | null = null;
+  settings: Settings = new Settings();
+  states: States;
+
+  constructor(
+    free42: MainModule,
+    skin: HTMLImageElement,
+    layout: Layout,
+    keymap: Keymap,
+  ) {
     this.free42 = free42;
     this.skin = skin;
     this.layout = layout;
@@ -13,15 +36,10 @@ export class Shell {
     this.screen = document.querySelector("#screen");
     this.ctx = this.screen.getContext("2d");
 
-    this.keydown = false;
-    this.keyTimeouts = [];
-    this.coreTimeout = null;
-
-    this.settings = new Settings();
     this.settings.allowBigStack = true;
     this.free42.updateSettings(this.settings);
 
-    this.screen.addEventListener("mousedown", (event) => {
+    this.screen.addEventListener("mousedown", (event: MouseEvent) => {
       this.audio.resume();
       let click = new Point(event.offsetX, event.offsetY);
       for (let key of this.layout.keys) {
@@ -29,7 +47,7 @@ export class Shell {
       }
     });
 
-    this.screen.addEventListener("mousemove", (event) => {
+    this.screen.addEventListener("mousemove", (event: MouseEvent) => {
       let hover = new Point(event.offsetX, event.offsetY);
       let overButton = this.layout.keys.some((key) =>
         key.display.contains(hover),
@@ -73,10 +91,9 @@ export class Shell {
     this.states.updateInterface();
 
     this.free42.init(this);
-    this.free42.load(null);
   }
 
-  keyPressed(keycode) {
+  keyPressed(keycode: number) {
     if (this.keydown) this.keyReleased();
     if (this.coreTimeout != null) {
       clearTimeout(this.coreTimeout);
@@ -104,6 +121,7 @@ export class Shell {
   init() {
     console.log("Wasm module loaded!");
 
+    if (this.layout.skin == null) throw "Invalid skin definition in layout";
     let [width, height] = this.layout.skin.size();
 
     // blit background
@@ -120,9 +138,10 @@ export class Shell {
     );
   }
 
-  blit(data) {
+  blit(data: Uint8Array) {
     // 17 bytes per line, 131×16 px
     let display = this.layout.display;
+    if (display == null) throw "Invalid display definition in layout";
 
     let image = this.ctx.createImageData(
       131 * display.scale.x,
@@ -153,8 +172,15 @@ export class Shell {
     this.ctx.putImageData(image, display.start.x, display.start.y);
   }
 
-  annunciators(updn, shf, prt, run, g, rad) {
-    let annunciators = {
+  annunciators(
+    updn: number,
+    shf: number,
+    prt: number,
+    run: number,
+    g: number,
+    rad: number,
+  ) {
+    let annunciators: { [key: number]: number } = {
       1: updn,
       2: shf,
       3: prt,
@@ -185,14 +211,14 @@ export class Shell {
     }
   }
 
-  requestTimeout(timeout) {
+  requestTimeout(timeout: number) {
     this.coreTimeout = setTimeout(() => {
       this.coreTimeout = null;
       this.free42.notify3(false);
     }, timeout);
   }
 
-  beep(tone) {
+  beep(tone: number) {
     const TONES = [165, 220, 247, 277, 294, 330, 370, 415, 440, 554, 1865];
     let [freq, duration] = [TONES[tone], tone == 10 ? 125 : 250];
 

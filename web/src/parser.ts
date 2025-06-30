@@ -1,16 +1,19 @@
 import { Point, Bounds } from "./math.js";
 
 export class Parser {
-  constructor(text) {
+  text: string;
+  index: number;
+
+  constructor(text: string) {
     this.text = text;
     this.index = 0;
   }
 
-  inBounds(index) {
+  inBounds(index?: number) {
     return index ?? this.index < this.text.length;
   }
 
-  peek() {
+  peek(): string | null {
     return this.inBounds() ? this.text[this.index] : null;
   }
 
@@ -19,7 +22,7 @@ export class Parser {
     return this.text[this.index++];
   }
 
-  expect(str) {
+  expect(str: string) {
     for (let i = 0; i < str.length; i++)
       if (this.take() != str[i]) throw new Error(`Expected ${str}`);
   }
@@ -36,7 +39,7 @@ export class Parser {
     return value;
   }
 
-  nextInts(count) {
+  nextInts(count: number) {
     let values = [];
     for (let i = 0; i < count; i++) {
       values.push(this.nextInt());
@@ -66,10 +69,11 @@ export class Parser {
   }
 }
 
-function isDigit(char) {
+function isDigit(char: string) {
   return /\d/.test(char);
 }
 
-function isWhitespace(char) {
+function isWhitespace(char: string | null) {
+  if (char == null) return false;
   return /\s/.test(char);
 }

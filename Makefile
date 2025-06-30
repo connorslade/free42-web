@@ -46,7 +46,7 @@ libbid:
 
 build: libbid
 	mkdir -p out
-	$(CXX) $(CFLAGS) $(EMSCRIPTEN_FLAGS) -o out/free42.js out/libbid.a $(SRCS)
+	$(CXX) $(CFLAGS) $(EMSCRIPTEN_FLAGS) -o out/free42.js --emit-tsd free42.d.ts out/libbid.a $(SRCS)
 
 clean:
 	rm -rf out

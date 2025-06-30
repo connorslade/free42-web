@@ -1,9 +1,9 @@
-import { Parser } from "./parser.js";
+import { Parser } from "./parser.ts";
 
 export class Keymap {
-  keys = [];
+  keys: Key[] = [];
 
-  constructor(raw) {
+  constructor(raw: string) {
     let lines = raw.split("\n");
     for (let line of lines) {
       if (line.startsWith("#")) continue;
@@ -34,13 +34,17 @@ export class Keymap {
 }
 
 export class Key {
-  constructor(key, shift, codes) {
+  shift: boolean;
+  key: string;
+  codes: number[];
+
+  constructor(key: string, shift: boolean, codes: number[]) {
     this.key = key;
     this.shift = shift;
     this.codes = codes;
   }
 }
 
-function isUpperCase(char) {
+function isUpperCase(char: string) {
   return /[A-Z]/.test(char);
 }

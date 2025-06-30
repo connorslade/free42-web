@@ -1,11 +1,13 @@
-import { Point, Color } from "./math.js";
-import { Parser } from "./parser.js";
+import { Point, Color, Bounds } from "./math.ts";
+import { Parser } from "./parser.ts";
 
 export class Layout {
-  keys = [];
-  annunciators = [];
+  skin: Bounds | null = null;
+  display: Display | null = null;
+  keys: Key[] = [];
+  annunciators: Annunciator[] = [];
 
-  constructor(raw) {
+  constructor(raw: string) {
     let lines = raw.split("\n");
     for (let line of lines) {
       if (line.startsWith("#")) continue;
@@ -18,13 +20,13 @@ export class Layout {
     }
   }
 
-  parseSkin(data) {
+  parseSkin(data: string) {
     let parser = new Parser(data);
     parser.skipWhitespace();
     this.skin = parser.nextRect();
   }
 
-  parseDisplay(data) {
+  parseDisplay(data: string) {
     let parser = new Parser(data);
     let [x, y] = parser.nextInts(2);
     let start = new Point(x, y);
@@ -37,10 +39,11 @@ export class Layout {
     parser.skipWhitespace();
     let background = Color.fromHex(parser.nextString());
 
+    if (foreground == null || background == null) throw "Invalid color format";
     this.display = new Display(start, scale, background, foreground);
   }
 
-  parseKey(data) {
+  parseKey(data: string) {
     let parser = new Parser(data);
 
     let keycode = parser.nextInt();
@@ -54,7 +57,7 @@ export class Layout {
     this.keys.push(new Key(keycode, sensitive, display, activeState));
   }
 
-  parseAnnunciator(data) {
+  parseAnnunciator(data: string) {
     let parser = new Parser(data);
 
     let code = parser.nextInt();
@@ -68,7 +71,17 @@ export class Layout {
 }
 
 export class Display {
-  constructor(start, scale, background, foreground) {
+  start: Point;
+  scale: Point;
+  background: Color;
+  foreground: Color;
+
+  constructor(
+    start: Point,
+    scale: Point,
+    background: Color,
+    foreground: Color,
+  ) {
     this.start = start;
     this.scale = scale;
     this.background = background;
@@ -77,7 +90,17 @@ export class Display {
 }
 
 export class Key {
-  constructor(keycode, sensitive, display, activeState) {
+  keycode: number;
+  sensitive: Bounds;
+  display: Bounds;
+  activeState: Point;
+
+  constructor(
+    keycode: number,
+    sensitive: Bounds,
+    display: Bounds,
+    activeState: Point,
+  ) {
     this.keycode = keycode;
     this.sensitive = sensitive;
     this.display = display;
@@ -86,7 +109,11 @@ export class Key {
 }
 
 export class Annunciator {
-  constructor(code, bounds, active) {
+  code: number;
+  bounds: Bounds;
+  active: Point;
+
+  constructor(code: number, bounds: Bounds, active: Point) {
     this.code = code;
     this.bounds = bounds;
     this.active = active;

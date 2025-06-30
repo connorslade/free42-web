@@ -1,5 +1,10 @@
+import type { MainModule } from "./free42";
+
 export class States {
-  constructor(free42) {
+  free42: MainModule;
+  root: any;
+
+  constructor(free42: MainModule) {
     this.free42 = free42;
     this.root = document.querySelector("#states");
   }
