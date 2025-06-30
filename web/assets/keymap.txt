@@ -48,8 +48,8 @@ e               : 16      # E
 E               : 28 16   # DISP
 Backspace       : 17      # <-
 Shift Backspace : 28 17   # CLEAR
-Up              : 18      # up
-Shift Up        : 28 18   # BST
+ArrowUp         : 18      # up
+Shift ArrowUp   : 28 18   # BST
 7               : 19      # 7
 KP_7            : 19      # 7
 ampersand       : 28 19   # SOLVER
@@ -62,14 +62,14 @@ parenleft       : 28 21   # MATRIX
 slash           : 22      # divide
 KP_Divide       : 22      # divide
 question        : 28 22   # STAT
-Down            : 23      # down
-Shift Down      : 28 23   # SST
+ArrowDown       : 23      # down
+Shift ArrowDown : 28 23   # SST
 4               : 24      # 4
 KP_4            : 24      # 4
-dollar          : 28 24   # BASE
+$               : 28 24   # BASE
 5               : 25      # 5
 KP_5            : 25      # 5
-percent         : 28 25   # CONVERT
+%               : 28 25   # CONVERT
 6               : 26      # 6
 KP_6            : 26      # 6
 asciicircum     : 28 26   # FLAGS

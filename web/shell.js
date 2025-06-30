@@ -1,5 +1,6 @@
 import { Point } from "./math.js";
 
+// todo: move some stuff outta here
 export class Shell {
   constructor(free42, skin, layout, keymap) {
     this.free42 = free42;
@@ -8,9 +9,6 @@ export class Shell {
     this.keymap = keymap;
 
     this.audio = new AudioContext();
-    this.oscillator = this.audio.createOscillator();
-    this.oscillator.connect(this.audio.destination);
-
     this.screen = document.querySelector("#screen");
     this.ctx = this.screen.getContext("2d");
 
@@ -51,9 +49,13 @@ export class Shell {
       if (event.ctrlKey && ["v", "V"].includes(event.key))
         this.free42.paste(await navigator.clipboard.readText());
 
+      console.log(event);
       for (let key of this.keymap.keys) {
         if (event.key == key.key && event.shiftKey == key.shift)
-          for (let code of key.codes) this.keyPressed(code);
+          for (let code of key.codes) {
+            this.keyPressed(code);
+            break;
+          }
       }
     });
 
@@ -177,7 +179,7 @@ export class Shell {
   requestTimeout(timeout) {
     this.coreTimeout = setTimeout(() => {
       this.coreTimeout = null;
-      module.notify3(false);
+      this.free42.notify3(false);
     }, timeout);
   }
 
@@ -185,11 +187,17 @@ export class Shell {
     const TONES = [165, 220, 247, 277, 294, 330, 370, 415, 440, 554, 1865];
     let [freq, duration] = [TONES[tone], tone == 10 ? 125 : 250];
 
-    this.oscillator.type = "sine";
-    this.oscillator.frequency.setValueAtTime(freq, this.audio.currentTime);
-    this.oscillator.start();
+    let gain = this.audio.createGain();
+    gain.connect(this.audio.destination);
+    gain.gain.setValueAtTime(0.25, this.audio.currentTime);
+
+    let oscillator = this.audio.createOscillator();
+    oscillator.connect(gain);
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(freq, this.audio.currentTime);
+    oscillator.start();
     setTimeout(() => {
-      this.oscillator.stop();
+      oscillator.stop();
     }, duration);
   }
 

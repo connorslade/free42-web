@@ -16,7 +16,8 @@ export class Keymap {
         .split(" ")
         .filter((x) => x.length > 0)
         .map((x) => x.trim());
-      let shift = key.includes("Shift");
+      let shift =
+        key.includes("Shift") || (key.length == 1 && isUpperCase(key[0]));
 
       let codes = [];
       let parser = new Parser(rawCodes);
@@ -38,4 +39,8 @@ export class Key {
     this.shift = shift;
     this.codes = codes;
   }
+}
+
+function isUpperCase(char) {
+  return /[A-Z]/.test(char);
 }
