@@ -1,10 +1,11 @@
 import { Point } from "./math.js";
 
 export class Shell {
-  constructor(free42, skin, layout) {
+  constructor(free42, skin, layout, keymap) {
     this.free42 = free42;
     this.skin = skin;
     this.layout = layout;
+    this.keymap = keymap;
 
     this.audio = new AudioContext();
     this.oscillator = this.audio.createOscillator();
@@ -44,11 +45,21 @@ export class Shell {
     });
 
     document.addEventListener("keydown", async (event) => {
-      console.log(event);
+      if (event.repeat) return;
       if (event.ctrlKey && ["c", "C"].includes(event.key))
         await navigator.clipboard.writeText(this.free42.copy());
       if (event.ctrlKey && ["v", "V"].includes(event.key))
         this.free42.paste(await navigator.clipboard.readText());
+
+      for (let key of this.keymap.keys) {
+        if (event.key == key.key && event.shiftKey == key.shift)
+          for (let code of key.codes) this.keyPressed(code);
+      }
+    });
+
+    document.addEventListener("keyup", () => {
+      // todo: only if was pressed with keyboard
+      this.keyReleased();
     });
 
     this.free42.init(this);
