@@ -1,8 +1,8 @@
-import { States } from "./states.ts";
-import { Point } from "./math.ts";
 import type { MainModule } from "./free42";
-import type { Layout } from "./layout.ts";
-import type { Keymap } from "./keymap.ts";
+import { States } from "./states";
+import { Point } from "./math";
+import type { Layout } from "./layout";
+import type { Keymap } from "./keymap";
 
 // todo: move some stuff outta here
 export class Shell {
@@ -62,7 +62,8 @@ export class Shell {
     });
 
     document.addEventListener("keydown", async (event) => {
-      if (event.repeat) return;
+      let body = document.querySelector("body");
+      if (event.target != body || event.repeat) return;
       if (event.ctrlKey && ["c", "C"].includes(event.key))
         await navigator.clipboard.writeText(this.free42.copy());
       if (event.ctrlKey && ["v", "V"].includes(event.key))
@@ -83,12 +84,8 @@ export class Shell {
       this.keyReleased();
     });
 
-    this.free42.FS.mkdir("/states");
-    this.free42.FS.mount(this.free42.IDBFS, {}, "/states");
-    this.free42.FS.syncfs(true, () => {});
-
     this.states = new States(this.free42);
-    this.states.updateInterface();
+    this.states.refresh();
 
     this.free42.init(this);
   }
@@ -170,6 +167,7 @@ export class Shell {
     }
 
     this.ctx.putImageData(image, display.start.x, display.start.y);
+    this.states.saveActive();
   }
 
   annunciators(
@@ -209,6 +207,8 @@ export class Shell {
         height,
       );
     }
+
+    this.states.saveActive();
   }
 
   requestTimeout(timeout: number) {

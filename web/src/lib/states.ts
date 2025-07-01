@@ -1,27 +1,45 @@
+import { writable, type Writable } from "svelte/store";
+import { shell, states } from "../main";
 import type { MainModule } from "./free42";
 
 export class States {
-  free42: MainModule;
-  root: any;
-
   constructor(free42: MainModule) {
-    this.free42 = free42;
-    this.root = document.querySelector("#states");
+    free42.FS.mkdir("/states");
+    free42.FS.mount(free42.IDBFS, { autoPersist: true }, "/states");
+    free42.FS.syncfs(true, () => {
+      this.refresh();
+      this.loadActive();
+    });
   }
 
-  updateInterface() {
-    let states = this.free42.FS.readdir("/states");
+  saveActive() {
+    shell?.free42.saveState("active");
+  }
 
-    let list = document.createElement("ul");
-    for (let state of states) {
-      if (state == "." || state == "..") continue;
-      let name = state.substring(0, state.length - 4);
+  loadActive() {
+    this.load("active");
+  }
 
-      let li = document.createElement("li");
-      li.innerText = name;
-      list.append(li);
-    }
+  save(name: string) {
+    shell?.free42.saveState(name);
+    this.refresh();
+  }
 
-    this.root.appendChild(list);
+  load(name: string) {
+    shell?.free42.loadState(name);
+  }
+
+  delete(name: string) {
+    shell?.free42.FS.unlink(`/states/${name}`);
+    this.refresh();
+  }
+
+  refresh() {
+    shell?.free42.FS.syncfs(false, () => {});
+    let state = shell?.free42.FS.readdir("/states") as string[] | undefined;
+    if (state == undefined) return;
+
+    state.reverse();
+    states.set(state.filter((x) => x != "." && x != ".." && x != "active"));
   }
 }

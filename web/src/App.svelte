@@ -1,24 +1,5 @@
 <script lang="ts">
-    import { Shell } from "./lib/shell";
-    import { Layout } from "./lib/layout";
-    import { Keymap } from "./lib/keymap";
-
-    window.addEventListener("load", async () => {
-        let skin = await loadImage("skin.gif");
-        let layout = new Layout(await (await fetch("skin.layout")).text());
-        let keymap = new Keymap(await (await fetch("keymap.txt")).text());
-        let module = await Free42();
-
-        (window as any).shell = new Shell(module, skin, layout, keymap);
-    });
-
-    async function loadImage(path: string): Promise<HTMLImageElement> {
-        let skin = new Image();
-        skin.src = path;
-        return new Promise((resolve) => {
-            skin.onload = () => resolve(skin);
-        });
-    }
+    import States from "./components/States.svelte";
 </script>
 
 <h1>Free42 Online</h1>
@@ -31,15 +12,15 @@
     is available on GitHub.
 </p>
 
-<canvas
-    id="screen"
-    width="340px"
-    height="617px"
-    style="image-rendering: pixelated"
-></canvas>
+<div style="display: flex; gap: 16px">
+    <canvas
+        id="screen"
+        width="340px"
+        height="617px"
+        style="image-rendering: pixelated"
+    ></canvas>
 
-<h2>States</h2>
-<input type="text" placeholder="State Name" />
-<button>Save State</button>
-
-<div id="states"></div>
+    <div>
+        <States />
+    </div>
+</div>

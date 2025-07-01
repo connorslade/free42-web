@@ -8,12 +8,15 @@ using namespace emscripten;
 
 val callbacks = val::undefined();
 
+void reset() {
+  core_init(0, 0, "", 0);
+  core_powercycle();
+}
+
 void init(val callbacks_ref) {
   callbacks = callbacks_ref;
   callbacks.call<void>("init");
-
-  core_init(0, 0, "", 0);
-  core_powercycle();
+  reset();
 }
 
 int keydown(int key) {
@@ -45,17 +48,18 @@ std::string copy() {
 void paste(std::string str) { core_paste(str.c_str()); }
 
 void save_state(std::string filename) {
-  auto path = std::string("/states/") + filename;
+  auto path = "/states/" + filename;
   core_save_state(path.c_str());
 }
 
 void load_state(std::string filename) {
-  auto path = std::string("/states/") + filename;
+  auto path = "/states/" + filename;
   core_init(1, 26, path.c_str(), 0);
 }
 
 EMSCRIPTEN_BINDINGS(free42) {
   function("init", &init);
+  function("reset", &reset);
   function("updateSettings", &updateSettings);
   function("keydown", &keydown);
   function("keyup", &core_keyup);
