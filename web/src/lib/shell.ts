@@ -18,7 +18,6 @@ export class Shell {
   keydown: boolean = false;
   keyTimeouts: number[] = [];
   coreTimeout: number | null = null;
-  settings: Settings = new Settings();
   states: States;
 
   constructor(
@@ -35,9 +34,6 @@ export class Shell {
     this.audio = new AudioContext();
     this.screen = document.querySelector("#screen");
     this.ctx = this.screen.getContext("2d");
-
-    this.settings.allowBigStack = true;
-    this.free42.updateSettings(this.settings);
 
     this.screen.addEventListener("mousedown", (event: MouseEvent) => {
       this.audio.resume();
@@ -237,12 +233,4 @@ export class Shell {
   }
 
   powerdown() {}
-}
-
-class Settings {
-  matrixSingularmatrix = false;
-  matrixOutOfRange = false;
-  autoRepeat = false;
-  allowBigStack = false;
-  localizedCopyPaste = false;
 }

@@ -11,7 +11,7 @@ import { loadImage } from "./lib/misc";
 // kinda jank but it's whatever
 export let states: Writable<string[]> = writable([]);
 
-export let shell: Shell | null = null;
+export var shell: Shell | null = null;
 const app = mount(App, {
   target: document.getElementById("app")!,
 });

@@ -1,10 +1,11 @@
 <script lang="ts">
+    import Settings from "./components/Settings.svelte";
     import States from "./components/States.svelte";
 </script>
 
-<h1>Free42 Online</h1>
+<h1>Free42 Web</h1>
 <p>
-    An online
+    A web based
     <span title="Front end for the Free42 core library">shell</span> for
     <a href="https://thomasokken.com/free42/">Free42</a>, . Created by
     <a href="https://connorcode.com">Connor Slade</a>,
@@ -22,5 +23,7 @@
 
     <div>
         <States />
+        <hr />
+        <Settings />
     </div>
 </div>
