@@ -3,6 +3,8 @@ import { States } from "./states";
 import { Point } from "./math";
 import type { Layout } from "./layout";
 import type { Keymap } from "./keymap";
+import { settings } from "./settings";
+import { get } from "svelte/store";
 
 // todo: move some stuff outta here
 export class Shell {
@@ -65,13 +67,15 @@ export class Shell {
       if (event.ctrlKey && ["v", "V"].includes(event.key))
         this.free42.paste(await navigator.clipboard.readText());
 
-      console.log(event);
+      if (event.ctrlKey) return;
       for (let key of this.keymap.keys) {
-        if (event.key == key.key && event.shiftKey == key.shift)
-          for (let code of key.codes) {
-            this.keyPressed(code);
-            break;
-          }
+        if (
+          event.key == key.key &&
+          (event.shiftKey || event.shiftKey == key.shift)
+        ) {
+          for (let code of key.codes) this.keyPressed(code);
+          break;
+        }
       }
     });
 
@@ -84,6 +88,7 @@ export class Shell {
     this.states.refresh();
 
     this.free42.init(this);
+    this.free42.updateSettings(get(settings));
   }
 
   keyPressed(keycode: number) {

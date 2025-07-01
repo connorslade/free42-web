@@ -22,7 +22,6 @@
 </div>
 
 <div class="buttons">
-    <button onclick={() => shell?.free42.reset()}>Reset</button>
     <button
         disabled={selected.length != 1}
         onclick={() => shell?.states.load(selected[0])}>Load</button

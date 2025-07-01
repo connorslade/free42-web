@@ -17,7 +17,7 @@ Then in the `web` directory run `pnpm i` then `pnpm build`.
 
 - [ ] Get program execution working
 - [ ] Cleanup interface
-- [ ] Popout calculator
+- [x] Popout calculator
 - [ ] Upload and downloads states and programs
 - [ ] Printer??
 - [ ] Shift the buttons when you click it?

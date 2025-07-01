@@ -37,9 +37,9 @@ c               : 11      # COS
 C               : 28 11   # ACOS
 t               : 12      # TAN
 T               : 28 12   # ATAN
-Return          : 13      # ENTER
+Enter           : 13      # ENTER
 KP_Enter        : 13      # ENTER
-Shift Return    : 28 13   # ALPHA
+Shift Enter     : 28 13   # ALPHA
 w               : 14      # X<>Y ("sWap")
 W               : 28 14   # LASTX
 n               : 15      # +/- ("Negative")
