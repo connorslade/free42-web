@@ -8,6 +8,9 @@ using namespace emscripten;
 
 val callbacks = val::undefined();
 
+// Commit hash of the free42 version
+std::string free42_version() { return "27e8300"; }
+
 void reset() {
   core_init(0, 0, "", 0);
   core_powercycle();
@@ -58,6 +61,7 @@ void load_state(std::string filename) {
 }
 
 EMSCRIPTEN_BINDINGS(free42) {
+  function("free42Version", &free42_version);
   function("init", &init);
   function("reset", &reset);
   function("updateSettings", &updateSettings);
