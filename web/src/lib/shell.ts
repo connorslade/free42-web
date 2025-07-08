@@ -1,4 +1,4 @@
-import type { MainModule } from "./free42";
+import type { MainModule, SpecialKeyValue } from "./free42";
 import { States } from "./states";
 import { Point } from "./math";
 import type { Layout } from "./layout";
@@ -68,6 +68,40 @@ export class Shell {
         this.free42.paste(await navigator.clipboard.readText());
 
       if (event.ctrlKey) return;
+      let menu = this.free42.keyboard();
+      let c = event.key.charCodeAt(0);
+
+      if (menu == this.free42.Keyboard.ALPHA && event.key.length == 1) {
+        if (c >= 97 && c <= 122) c = c + 65 - 97;
+        else if (c >= 65 && c <= 90) c = c + 97 - 65;
+        this.keyPressed(1024 + c);
+        return;
+      }
+
+      if (
+        ((menu == this.free42.Keyboard.HEX && c >= 97 && c <= 102) ||
+          (c >= 65 && c <= 70)) &&
+        event.key.length == 1
+      ) {
+        if (c >= 97 && c <= 102) c = c - 97 + 1;
+        else c = c - 65 + 1;
+        this.keyPressed(c);
+        return;
+      }
+
+      if (event.key == "ArrowLeft")
+        return this.keyPressed(
+          this.free42.specialKey(this.free42.SpecialKey.LEFT, event.shiftKey),
+        );
+      if (event.key == "ArrowRight")
+        return this.keyPressed(
+          this.free42.specialKey(this.free42.SpecialKey.RIGHT, event.shiftKey),
+        );
+      if (event.key == "Delete")
+        return this.keyPressed(
+          this.free42.specialKey(this.free42.SpecialKey.DELETE, false),
+        );
+
       for (let key of this.keymap.keys) {
         if (
           event.key == key.key &&
@@ -103,10 +137,11 @@ export class Shell {
     this.keepRunning(result.keepRunning);
     this.free42.repaint();
 
-    this.keyTimeouts = [
-      setTimeout(() => this.free42.notify1(), 250),
-      setTimeout(() => this.free42.notify2(), 2000),
-    ];
+    if (!result.enqueued)
+      this.keyTimeouts = [
+        setTimeout(() => this.free42.notify1(), 250),
+        setTimeout(() => this.free42.notify2(), 2000),
+      ];
   }
 
   keyReleased() {
@@ -119,10 +154,10 @@ export class Shell {
   keepRunning(keepRunning: boolean) {
     clearTimeout(this.keepRunningId);
     if (keepRunning) {
-      this.keepRunningId = setTimeout(() => {
-        console.log("running inner");
-        this.keepRunning(this.free42.keydown(0).keepRunning);
-      }, 100);
+      this.keepRunningId = setTimeout(
+        () => this.keepRunning(this.free42.keydown(0).keepRunning),
+        0,
+      );
     }
   }
 

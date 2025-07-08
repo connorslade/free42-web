@@ -16,16 +16,15 @@ In the `web` directory run `pnpm i` then `pnpm build`, which will generated all 
 ## Todo
 
 - [x] Get program execution working
-- [ ] Cleanup interface
 - [x] Popout calculator
 - [x] Upload and downloads states and programs
-- [ ] Printer??
-- [ ] Shift the buttons when you click it?
-- [ ] Fix keymap
-- [ ] Allow loading custom skins
 - [x] Settings menu
+- [ ] Fix keymap
 - [ ] Key repeating
 - [ ] Offline support (PWA)
 - [ ] Power off
 - [ ] Different keyboard handing when in alphanumeric input
+- [ ] Allow loading custom skins
+- [ ] Shift the buttons when you click it?
 - [ ] look into memory leaks?
+- [ ] Printer??

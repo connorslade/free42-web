@@ -29,7 +29,7 @@ void shell_annunciators(int updn, int shf, int prt, int run, int g, int rad) {
 bool shell_wants_cpu() {
   return std::chrono::duration_cast<std::chrono::milliseconds>(
              last_keydown.time_since_epoch())
-             .count() > 20;
+             .count() > 500;
 }
 
 void shell_delay(int duration) {

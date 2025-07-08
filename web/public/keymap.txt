@@ -52,16 +52,16 @@ ArrowUp         : 18      # up
 Shift ArrowUp   : 28 18   # BST
 7               : 19      # 7
 KP_7            : 19      # 7
-ampersand       : 28 19   # SOLVER
+&               : 28 19   # SOLVER
 8               : 20      # 8
 KP_8            : 20      # 8
 Alt 8           : 28 20   # Integ f(x) (note: can't use "Shift 8" because that's "*", which we use for "multiply")
 9               : 21      # 9
 KP_9            : 21      # 9
-parenleft       : 28 21   # MATRIX
-slash           : 22      # divide
+(               : 28 21   # MATRIX
+/               : 22      # divide
 KP_Divide       : 22      # divide
-question        : 28 22   # STAT
+?               : 28 22   # STAT
 ArrowDown       : 23      # down
 Shift ArrowDown : 28 23   # SST
 4               : 24      # 4
@@ -84,7 +84,7 @@ KP_2            : 30      # 2
 at              : 28 30   # CUSTOM
 3               : 31      # 3
 KP_3            : 31      # 3
-numbersign      : 28 31   # PGM.FCN
+#               : 28 31   # PGM.FCN
 -               : 32      # -
 KP_Subtract     : 32      # -
 _               : 28 32   # PRINT
