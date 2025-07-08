@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstdlib>
 #include <emscripten/bind.h>
 #include <emscripten/val.h>
 #include <string>
@@ -98,6 +99,37 @@ int special_key(SpecialKey key, bool shift) {
   return core_special_menu_key(code);
 }
 
+void load_program(std::string data) {
+  gfile = fmemopen(data.data(), data.size(), "rb");
+  core_import_programs(0, nullptr);
+}
+
+val export_program() {
+  if (current_prgm == -1)
+    return val::undefined();
+
+  auto size = core_program_size(current_prgm) + 3;
+  auto buffer = malloc(size);
+
+  gfile = fmemopen(buffer, size, "wb");
+  if (gfile == nullptr)
+    return val::undefined();
+
+  export_hp42s(current_prgm);
+  fclose(gfile);
+
+  for (size_t i = 0; i < size; ++i) {
+    printf("%02X ", ((uint8_t *)buffer)[i]);
+  }
+  printf("\n");
+
+  emscripten::val view{emscripten::typed_memory_view(size, (uint8_t *)buffer)};
+  auto result = emscripten::val::global("Uint8Array").new_(size);
+  result.call<void>("set", view);
+
+  return result;
+}
+
 EMSCRIPTEN_BINDINGS(free42) {
   function("free42Version", &free42_version);
   function("init", &init);
@@ -115,6 +147,8 @@ EMSCRIPTEN_BINDINGS(free42) {
   function("loadState", &load_state_wrapper);
   function("keyboard", &keyboard);
   function("specialKey", &special_key);
+  function("loadProgram", &load_program);
+  function("exportProgram", &export_program);
 
   enum_<Keyboard>("Keyboard")
       .value("DEFAULT", Keyboard::DEFAULT)

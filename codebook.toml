@@ -19,6 +19,13 @@ words = [
     "blitter",
     "powerdown",
     "clk",
-    "chrono"
+    "chrono",
+    "fmemopen",
+    "gfile",
+    "nullptr",
+    "prgm",
+    "keytimeout",
+    "singularmatrix",
+    "outofrange"
 ]
 ignore_patterns = ["D[A-Z]+", "<.*>"]

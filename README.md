@@ -18,7 +18,7 @@ In the `web` directory run `pnpm i` then `pnpm build`, which will generated all 
 - [x] Get program execution working
 - [ ] Cleanup interface
 - [x] Popout calculator
-- [ ] Upload and downloads states and programs
+- [x] Upload and downloads states and programs
 - [ ] Printer??
 - [ ] Shift the buttons when you click it?
 - [ ] Fix keymap
@@ -28,3 +28,4 @@ In the `web` directory run `pnpm i` then `pnpm build`, which will generated all 
 - [ ] Offline support (PWA)
 - [ ] Power off
 - [ ] Different keyboard handing when in alphanumeric input
+- [ ] look into memory leaks?
