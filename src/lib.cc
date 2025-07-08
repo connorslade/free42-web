@@ -25,18 +25,10 @@ void init(val callbacks_ref) {
 }
 
 KeydownResult keydown(int key) {
+  last_keydown = std::chrono::system_clock::now();
   KeydownResult out;
   out.keep_running = core_keydown(key, &out.enqueued, &out.repeat);
-  std::printf("lib::keydown { key: %d, enqueued: %d, repeat: %d }\n", key,
-              out.enqueued, out.repeat);
   return out;
-}
-
-bool keyup() {
-  bool keep_running = core_keyup();
-  printf("lib::keyup { keep_running: %d }\n", keep_running);
-
-  return keep_running;
 }
 
 void updateSettings(val settings) {
@@ -112,7 +104,7 @@ EMSCRIPTEN_BINDINGS(free42) {
   function("reset", &reset);
   function("updateSettings", &updateSettings);
   function("keydown", &keydown);
-  function("keyup", &keyup);
+  function("keyup", &core_keyup);
   function("notify1", &core_keytimeout1);
   function("notify2", &core_keytimeout2);
   function("notify3", &core_timeout3);

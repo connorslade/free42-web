@@ -15,7 +15,7 @@ In the `web` directory run `pnpm i` then `pnpm build`, which will generated all 
 
 ## Todo
 
-- [ ] Get program execution working
+- [x] Get program execution working
 - [ ] Cleanup interface
 - [x] Popout calculator
 - [ ] Upload and downloads states and programs

@@ -100,7 +100,7 @@ export class Shell {
 
     this.keydown = true;
     let result = this.free42.keydown(keycode);
-    if (result.keepRunning) this.keepRunning();
+    this.keepRunning(result.keepRunning);
     this.free42.repaint();
 
     this.keyTimeouts = [
@@ -112,12 +112,18 @@ export class Shell {
   keyReleased() {
     this.keydown = false;
     for (let timeout of this.keyTimeouts) clearTimeout(timeout);
-    let keepRunning = this.free42.keyup();
-    if (keepRunning) this.keepRunning();
+    this.keepRunning(this.free42.keyup());
   }
 
-  keepRunning() {
-    while (this.free42.keydown(0).keepRunning) {}
+  keepRunningId: number | undefined = undefined;
+  keepRunning(keepRunning: boolean) {
+    clearTimeout(this.keepRunningId);
+    if (keepRunning) {
+      this.keepRunningId = setTimeout(() => {
+        console.log("running inner");
+        this.keepRunning(this.free42.keydown(0).keepRunning);
+      }, 100);
+    }
   }
 
   // == free42 core events==
