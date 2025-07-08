@@ -4,8 +4,8 @@ import { shell } from "../main";
 export class Settings {
   matrixSingularmatrix = false;
   matrixOutOfRange = false;
-  autoRepeat = false;
-  allowBigStack = false;
+  autoRepeat = true;
+  allowBigStack = true;
   localizedCopyPaste = false;
 
   constructor() {

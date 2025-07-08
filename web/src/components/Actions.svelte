@@ -18,7 +18,7 @@
 
 <button
     onclick={() => {
-        window.open("/?mini=true", "Free42 Web", "popup width=340p height=615");
+        window.open("?mini=true", "Free42 Web", "popup width=340p height=615");
     }}>Pop Out</button
 >
 

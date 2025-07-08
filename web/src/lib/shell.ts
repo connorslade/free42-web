@@ -286,7 +286,7 @@ export class Shell {
   requestTimeout(timeout: number) {
     this.coreTimeout = setTimeout(() => {
       this.coreTimeout = null;
-      this.free42.notify3(false);
+      this.free42.notify3(true);
     }, timeout);
   }
 
