@@ -26,3 +26,5 @@ In the `web` directory run `pnpm i` then `pnpm build`, which will generated all 
 - [x] Settings menu
 - [ ] Key repeating
 - [ ] Offline support (PWA)
+- [ ] Power off
+- [ ] Different keyboard handing when in alphanumeric input

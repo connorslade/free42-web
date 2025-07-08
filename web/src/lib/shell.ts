@@ -99,7 +99,8 @@ export class Shell {
     }
 
     this.keydown = true;
-    let repeat = this.free42.keydown(keycode);
+    let result = this.free42.keydown(keycode);
+    if (result.keepRunning) this.keepRunning();
     this.free42.repaint();
 
     this.keyTimeouts = [
@@ -111,7 +112,12 @@ export class Shell {
   keyReleased() {
     this.keydown = false;
     for (let timeout of this.keyTimeouts) clearTimeout(timeout);
-    this.free42.keyup();
+    let keepRunning = this.free42.keyup();
+    if (keepRunning) this.keepRunning();
+  }
+
+  keepRunning() {
+    while (this.free42.keydown(0).keepRunning) {}
   }
 
   // == free42 core events==

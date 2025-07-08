@@ -1,12 +1,14 @@
+#include <cstdio>
 #include <emscripten/bind.h>
 #include <emscripten/val.h>
 #include <string>
 
+#include "../free42/common/core_globals.h"
 #include "../free42/common/core_main.h"
 
-using namespace emscripten;
+#include "lib.h"
 
-val callbacks = val::undefined();
+using namespace emscripten;
 
 // Commit hash of the free42 version
 std::string free42_version() { return "27e8300"; }
@@ -22,12 +24,19 @@ void init(val callbacks_ref) {
   reset();
 }
 
-int keydown(int key) {
-  bool enqueued;
-  int repeat;
-  core_keydown(key, &enqueued, &repeat);
+KeydownResult keydown(int key) {
+  KeydownResult out;
+  out.keep_running = core_keydown(key, &out.enqueued, &out.repeat);
+  std::printf("lib::keydown { key: %d, enqueued: %d, repeat: %d }\n", key,
+              out.enqueued, out.repeat);
+  return out;
+}
 
-  return repeat;
+bool keyup() {
+  bool keep_running = core_keyup();
+  printf("lib::keyup { keep_running: %d }\n", keep_running);
+
+  return keep_running;
 }
 
 void updateSettings(val settings) {
@@ -50,14 +59,51 @@ std::string copy() {
 
 void paste(std::string str) { core_paste(str.c_str()); }
 
-void save_state(std::string filename) {
-  auto path = "/states/" + filename;
-  core_save_state(path.c_str());
+// A custom save impl is used here over core_save_state because the default
+// implementation stops program execution and has other side effects that are
+// undesirable when calling this all the time. Since we might not get a heads-up
+// that the page is closing, the state is just saved automatically quite
+// frequently.
+void save_state_passive(std::string filename) {
+  auto path = ("/states/" + filename);
+
+  gfile = fopen(path.c_str(), "wb");
+  if (gfile != NULL) {
+    bool success;
+    save_state(&success);
+    fclose(gfile);
+  }
 }
 
-void load_state(std::string filename) {
+void load_state_wrapper(std::string filename) {
   auto path = "/states/" + filename;
+  core_cleanup();
   core_init(1, 26, path.c_str(), 0);
+}
+
+Keyboard keyboard() {
+  if (core_alpha_menu())
+    return Keyboard::ALPHA;
+  if (core_hex_menu())
+    return Keyboard::HEX;
+  if (core_menu())
+    return Keyboard::MENU;
+  return Keyboard::DEFAULT;
+}
+
+int special_key(SpecialKey key, bool shift) {
+  int code = -1;
+
+  if (key == SpecialKey::LEFT)
+    code = 1 + shift;
+  else if (key == SpecialKey::RIGHT)
+    code = 3 + shift;
+  else if (key == SpecialKey::DELETE)
+    code = 5;
+
+  if (code == -1)
+    return 0;
+  return core_special_menu_key(code);
 }
 
 EMSCRIPTEN_BINDINGS(free42) {
@@ -66,13 +112,30 @@ EMSCRIPTEN_BINDINGS(free42) {
   function("reset", &reset);
   function("updateSettings", &updateSettings);
   function("keydown", &keydown);
-  function("keyup", &core_keyup);
+  function("keyup", &keyup);
   function("notify1", &core_keytimeout1);
   function("notify2", &core_keytimeout2);
   function("notify3", &core_timeout3);
   function("repaint", &core_repaint_display);
   function("copy", &copy);
   function("paste", &paste);
-  function("saveState", &save_state);
-  function("loadState", &load_state);
+  function("saveState", &save_state_passive);
+  function("loadState", &load_state_wrapper);
+  function("keyboard", &keyboard);
+  function("specialKey", &special_key);
+
+  enum_<Keyboard>("Keyboard")
+      .value("DEFAULT", Keyboard::DEFAULT)
+      .value("ALPHA", Keyboard::ALPHA)
+      .value("HEX", Keyboard::HEX)
+      .value("MENU", Keyboard::MENU);
+  enum_<SpecialKey>("SpecialKey")
+      .value("LEFT", SpecialKey::LEFT)
+      .value("RIGHT", SpecialKey::RIGHT)
+      .value("DELETE", SpecialKey::DELETE);
+
+  class_<KeydownResult>("KeydownResult")
+      .property("keepRunning", &KeydownResult::keep_running)
+      .property("repeat", &KeydownResult::repeat)
+      .property("enqueued", &KeydownResult::enqueued);
 }
