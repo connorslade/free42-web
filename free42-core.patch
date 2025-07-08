@@ -1,0 +1,25 @@
+diff --git a/free42/common/core_main.cc b/free42/common/core_main.cc
+index a6bfe63d..fa1e78bc 100644
+--- a/free42/common/core_main.cc
++++ b/free42/common/core_main.cc
+@@ -902,7 +902,7 @@ char *core_list_programs() {
+     return buf;
+ }
+
+-static void export_hp42s(int index) {
++void export_hp42s(int index) {
+     int4 pc = 0;
+     int cmd;
+     arg_struct arg;
+diff --git a/free42/common/core_main.h b/free42/common/core_main.h
+index a18526ae..8856fe70 100644
+--- a/free42/common/core_main.h
++++ b/free42/common/core_main.h
+@@ -382,6 +382,7 @@ void finish_alpha_prgm_line();
+ int shiftcharacter(char c);
+ void set_old_pc(int4 pc);
+ const char *number_format();
++void export_hp42s(int index);
+
+
+ #endif

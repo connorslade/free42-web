@@ -10,7 +10,7 @@ SRCS = $(wildcard src/*.cc) \
 	free42/common/core_math1.cc free42/common/core_math2.cc free42/common/core_phloat.cc free42/common/core_sto_rcl.cc \
 	free42/common/core_tables.cc free42/common/core_variables.cc
 
-# Modified from free42/common/from free42 makefile
+# Modified from gtk makefile
 CFLAGS += -Wall \
 	 -Wno-parentheses \
 	 -Wno-sign-compare \
@@ -46,7 +46,9 @@ libbid:
 
 build: libbid
 	mkdir -p out
+	patch -Nfp1 --merge --no-backup-if-mismatch < free42-core.patch
 	$(CXX) $(CFLAGS) $(EMSCRIPTEN_FLAGS) -o out/free42.js --emit-tsd free42.d.ts out/libbid.a $(SRCS)
 
 clean:
+	patch -Nfp1 --merge --no-backup-if-mismatch -R < free42-core.patch
 	rm -rf out
