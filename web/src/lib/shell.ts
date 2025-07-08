@@ -17,10 +17,10 @@ export class Shell {
   screen: any;
   ctx: any;
 
+  power: boolean = true;
   keydown: boolean = false;
   keyTimeouts: number[] = [];
   coreTimeout: number | null = null;
-  repeatTimeout: number | null = null;
   states: States;
 
   constructor(
@@ -127,6 +127,15 @@ export class Shell {
   }
 
   keyPressed(keycode: number) {
+    if (!this.power) {
+      if (keycode == 33) {
+        this.states.loadActive();
+        this.free42.powerCycle();
+        this.power = true;
+      }
+      return;
+    }
+
     if (this.keydown) this.keyReleased();
     if (this.coreTimeout != null) {
       clearTimeout(this.coreTimeout);
@@ -299,5 +308,10 @@ export class Shell {
     }, duration);
   }
 
-  powerdown() {}
+  powerdown() {
+    this.states.saveActive();
+    this.power = false;
+    this.annunciators(0, 0, 0, 0, 0, 0);
+    this.blit(new Uint8Array(4454));
+  }
 }

@@ -2,7 +2,7 @@
 
 A work in progress web based shell for [Free42](https://thomasokken.com/free42), the HP-42S simulator.
 
-![Screenshot from 2025-06-30 at 22_50_10 260384511](https://github.com/user-attachments/assets/773875f2-d527-470f-9f3e-f0a37a45ee2d)
+![Screenshot 2025-07-08 at 15-40-41 Free42 Web](https://github.com/user-attachments/assets/bfd411b8-1014-431f-a361-0cfed376b7bc)
 
 ## Building
 
@@ -22,9 +22,9 @@ In the `web` directory run `pnpm i` then `pnpm build`, which will generated all 
 - [x] Fix keymap
 - [x] Key repeating
 - [ ] Offline support (PWA)
-- [ ] Mobile support
-- [ ] Power off
-- [ ] Different keyboard handing when in alphanumeric input
+- [x] Mobile support
+- [x] Power off
+- [x] Different keyboard handing when in alphanumeric input
 - [ ] Allow loading custom skins
 - [ ] Shift the buttons when you click it?
 - [ ] look into memory leaks?

@@ -100,4 +100,11 @@
     .pixelated {
         image-rendering: pixelated;
     }
+
+    @media (max-width: 800px) {
+        .calculator {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
 </style>

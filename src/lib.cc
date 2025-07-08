@@ -150,6 +150,7 @@ EMSCRIPTEN_BINDINGS(free42) {
   function("specialKey", &special_key);
   function("loadProgram", &load_program);
   function("exportProgram", &export_program);
+  function("powerCycle", &core_powercycle);
 
   enum_<Keyboard>("Keyboard")
       .value("DEFAULT", Keyboard::DEFAULT)
