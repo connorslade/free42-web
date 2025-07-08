@@ -20,6 +20,7 @@ export class Shell {
   keydown: boolean = false;
   keyTimeouts: number[] = [];
   coreTimeout: number | null = null;
+  repeatTimeout: number | null = null;
   states: States;
 
   constructor(
@@ -137,7 +138,9 @@ export class Shell {
     this.keepRunning(result.keepRunning);
     this.free42.repaint();
 
-    if (!result.enqueued)
+    if (!result.keepRunning && result.repeat != 0)
+      this.keyRepeat(result.repeat);
+    else if (!result.keepRunning && !result.enqueued)
       this.keyTimeouts = [
         setTimeout(() => this.free42.notify1(), 250),
         setTimeout(() => this.free42.notify2(), 2000),
@@ -148,6 +151,18 @@ export class Shell {
     this.keydown = false;
     for (let timeout of this.keyTimeouts) clearTimeout(timeout);
     this.keepRunning(this.free42.keyup());
+  }
+
+  keyRepeat(repeat: number) {
+    if (repeat == 0) return;
+    setTimeout(
+      () => {
+        if (!this.keydown) return;
+        this.keyRepeat(this.free42.repeat());
+        this.free42.repaint();
+      },
+      repeat == 1 ? 200 : 100,
+    );
   }
 
   keepRunningId: number | undefined = undefined;

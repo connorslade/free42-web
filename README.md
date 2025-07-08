@@ -19,9 +19,10 @@ In the `web` directory run `pnpm i` then `pnpm build`, which will generated all 
 - [x] Popout calculator
 - [x] Upload and downloads states and programs
 - [x] Settings menu
-- [ ] Fix keymap
-- [ ] Key repeating
+- [x] Fix keymap
+- [x] Key repeating
 - [ ] Offline support (PWA)
+- [ ] Mobile support
 - [ ] Power off
 - [ ] Different keyboard handing when in alphanumeric input
 - [ ] Allow loading custom skins

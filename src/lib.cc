@@ -137,6 +137,7 @@ EMSCRIPTEN_BINDINGS(free42) {
   function("updateSettings", &updateSettings);
   function("keydown", &keydown);
   function("keyup", &core_keyup);
+  function("repeat", &core_repeat);
   function("notify1", &core_keytimeout1);
   function("notify2", &core_keytimeout2);
   function("notify3", &core_timeout3);
