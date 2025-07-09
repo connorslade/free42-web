@@ -148,7 +148,7 @@ export class Shell {
     this.free42.repaint();
 
     if (!result.keepRunning && result.repeat != 0)
-      this.keyRepeat(result.repeat);
+      this.keyRepeat(result.repeat, true);
     else if (!result.keepRunning && !result.enqueued)
       this.keyTimeouts = [
         setTimeout(() => this.free42.notify1(), 250),
@@ -162,15 +162,15 @@ export class Shell {
     this.keepRunning(this.free42.keyup());
   }
 
-  keyRepeat(repeat: number) {
+  keyRepeat(repeat: number, first: boolean) {
     if (repeat == 0) return;
     setTimeout(
       () => {
         if (!this.keydown) return;
-        this.keyRepeat(this.free42.repeat());
+        this.keyRepeat(this.free42.repeat(), false);
         this.free42.repaint();
       },
-      repeat == 1 ? 200 : 100,
+      first ? (repeat == 1 ? 1000 : 500) : repeat == 1 ? 200 : 100,
     );
   }
 

@@ -118,16 +118,8 @@ val export_program() {
   export_hp42s(current_prgm);
   fclose(gfile);
 
-  for (size_t i = 0; i < size; ++i) {
-    printf("%02X ", ((uint8_t *)buffer)[i]);
-  }
-  printf("\n");
-
-  emscripten::val view{emscripten::typed_memory_view(size, (uint8_t *)buffer)};
-  auto result = emscripten::val::global("Uint8Array").new_(size);
-  result.call<void>("set", view);
-
-  return result;
+  return emscripten::val::global("Uint8Array")
+      .new_(emscripten::typed_memory_view(size, (uint8_t *)buffer));
 }
 
 EMSCRIPTEN_BINDINGS(free42) {
