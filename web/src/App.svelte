@@ -81,6 +81,10 @@
         color: rgb(0, 0, 238);
     }
 
+    canvas {
+        user-select: none;
+    }
+
     .preamble {
         text-align: justify;
     }

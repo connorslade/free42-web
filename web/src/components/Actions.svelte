@@ -22,6 +22,9 @@
     }}>Pop Out</button
 >
 
+<button onclick={async () => await navigator.clipboard.writeText(shell!.free42.copy())}>Copy</button>
+<button onclick={async () => shell?.free42.paste(await navigator.clipboard.readText())}>Paste</button>
+
 <button>
     <label for="importProgram">Import Program</label>
 </button>
